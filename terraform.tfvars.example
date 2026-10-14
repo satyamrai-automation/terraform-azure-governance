@@ -1,0 +1,52 @@
+# Standard deployment (works with Contributor role)
+resource_groups = {
+  "rg-rally-dev" = {
+    name     = "rg-rally-dev-centralindia"
+    location = "centralindia"
+    tags = {
+      Environment = "dev"
+      Project     = "rally-tech"
+      ManagedBy   = "Terraform"
+    }
+  }
+}
+
+user_assigned_identities = {
+  "id-app-runner" = {
+    name               = "uai-rally-dev-apprunner"
+    location           = "centralindia"
+    resource_group_key = "rg-rally-dev"
+    tags = {
+      Environment = "dev"
+      Project     = "rally-tech"
+    }
+  }
+}
+
+# Optional configurations requiring elevated rights (Owner / User Access Administrator)
+#
+# management_locks = {
+#   "lock-rg-prod" = {
+#     name               = "lock-prevent-accidental-deletion"
+#     resource_group_key = "rg-rally-dev"
+#     lock_level         = "CanNotDelete"
+#     notes              = "Protected production resource group"
+#   }
+# }
+#
+# role_assignments = {
+#   "assign-blob-reader" = {
+#     resource_group_key   = "rg-rally-dev"
+#     identity_key         = "id-app-runner"
+#     role_definition_name = "Storage Blob Data Reader"
+#   }
+# }
+#
+# policy_assignments = {
+#   "enforce-tags" = {
+#     name                 = "enforce-environment-tag"
+#     resource_group_key   = "rg-rally-dev"
+#     policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/1e30110a-5ceb-460c-a204-c14969fafe3d"
+#     display_name         = "Require Environment Tag on Resource Groups"
+#   }
+# }
