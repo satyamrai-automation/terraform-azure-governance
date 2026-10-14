@@ -33,28 +33,38 @@ This module encapsulates 5 foundational Azure governance resources:
 
 ## 🚀 Consumption in Root Modules (`Rally-tech-infra`)
 
+### 1. In `environments/dev/main.tf`:
 ```hcl
 module "governance" {
-  source = "git::https://dev.azure.com/satyam-cicd-org/DevOpsOrbit/_git/terraform-azure-governance?ref=v1.0.0"
+  source = "git::https://github.com/satyamrai-automation/terraform-azure-governance.git?ref=v1.0.0"
 
-  resource_groups = {
-    "rg-dev" = {
-      name     = "rg-rally-dev-centralindia"
-      location = "centralindia"
-      tags = {
-        Environment = "dev"
-        Project     = "rally-tech"
-        ManagedBy   = "Terraform"
-      }
+  resource_groups          = var.resource_groups
+  user_assigned_identities = var.user_assigned_identities
+  management_locks         = var.management_locks
+  role_assignments         = var.role_assignments
+  policy_assignments       = var.policy_assignments
+}
+```
+
+### 2. In `environments/dev/terraform.tfvars`:
+```hcl
+resource_groups = {
+  "rg-rally-dev" = {
+    name     = "rg-rally-dev-centralindia"
+    location = "centralindia"
+    tags = {
+      Environment = "dev"
+      Project     = "rally-tech"
+      ManagedBy   = "Terraform"
     }
   }
+}
 
-  user_assigned_identities = {
-    "id-app" = {
-      name               = "uai-rally-dev-app"
-      location           = "centralindia"
-      resource_group_key = "rg-dev"
-    }
+user_assigned_identities = {
+  "uai-app" = {
+    name               = "uai-rally-dev-app"
+    location           = "centralindia"
+    resource_group_key = "rg-rally-dev"
   }
 }
 ```
